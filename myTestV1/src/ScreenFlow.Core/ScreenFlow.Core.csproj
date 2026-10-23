@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.Core</RootNamespace>
+    <AssemblyName>ScreenFlow.Core</AssemblyName>
+    <!--
+      Language-neutral core (02 §1.1). Must never reference Microsoft.CodeAnalysis.*,
+      ScreenFlow.CSharp or ScreenFlow.UnityPos. Enforced by
+      tests/ScreenFlow.Architecture.Tests/ArchitectureTests.cs.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The DDL ships as a resource so the shipped schema and 02 section 7 can be diffed directly. -->
+    <EmbeddedResource Include="Storage\Schema.sql" LogicalName="ScreenFlow.Core.Storage.Schema.sql" />
+  </ItemGroup>
+
+</Project>

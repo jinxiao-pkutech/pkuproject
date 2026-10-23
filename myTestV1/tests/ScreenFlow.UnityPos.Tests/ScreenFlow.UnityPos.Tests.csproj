@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.UnityPos.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ScreenFlow.UnityPos\ScreenFlow.UnityPos.csproj" />
+    <!--
+      The adapter tests run against an index built from the MiniPos fixture, which needs the real
+      extractor. 02 §1.1 forbids UnityPos itself from referencing it, and the architecture tests
+      check that on the production assemblies; a test project that drives the pipeline end to end
+      has to see both ends of it.
+    -->
+    <ProjectReference Include="..\..\src\ScreenFlow.CSharp\ScreenFlow.CSharp.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,32 @@
+//▼ ADD 2024.01.17 Fixture@Test レガシーファイル（CP932 で保存される）
+// このファイルは CP932 のまま残っている旧資産。合計金額のラベルを保持する。
+// 文字コードの判定を誤ると、ここの日本語文字列がすべて壊れる。
+
+namespace Assets.Common.Legacy
+{
+    // 旧キー計算（現在はラベル定数のみ使用）
+    public static class KeyCalculator
+    {
+        // 合計金額のラベル。画面表示にそのまま使われる。
+        public const string Label = "合計金額";
+
+        // 単位の表示（円）
+        public const string Unit = "円";
+
+        // 計算結果が未確定のときの表示
+        public const string Undetermined = "未確定";
+
+        // 小計を求める（夾雑物のない単純な加算）
+        public static int Subtotal(int unitPrice, int count)
+        {
+            // 数量が負のときは 0 として扱う
+            if (count < 0)
+            {
+                return 0;
+            }
+
+            return unitPrice * count;
+        }
+    }
+}
+//▲ ADD 2024.01.17 Fixture@Test レガシーファイル

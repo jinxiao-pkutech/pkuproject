@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>IrEmitterHelper</RootNamespace>
+    <AssemblyName>IrEmitterHelper</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <!--
+      Stands in for an out-of-process extractor in ScreenFlow.CSharp.Tests / Core.Tests. It writes
+      raw NDJSON and deliberately does NOT reference ScreenFlow.Core: a stand-in that shared the
+      core's model could not demonstrate that the wire contract alone is enough.
+    -->
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,11 @@
+bin/
+obj/
+publish/
+.screenflow/
+acceptance/results/
+
+# Local tooling noise
+*.user
+.vs/
+.idea/
+TestResults/

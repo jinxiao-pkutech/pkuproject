@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1",
+  "profiles": [
+    {
+      "id": "android-onsite",
+      "platform": "android",
+      "rsp": { "root": "Library/Bee", "selectPlatform": "android", "excludeNamePatterns": [".mvfrm."] },
+      "defines": {
+        "add": [],
+        "remove": ["TeamUI", "TeamUIDummy", "APP_TEST", "UNITY_EDITOR", "UNITY_EDITOR_WIN", "UNITY_INCLUDE_TESTS"]
+      },
+      "assemblies": { "include": ["Assembly-CSharp"], "exclude": ["*Editor*", "*Tests*"] },
+      "allowHostFrameworkReferences": false
+    },
+    {
+      "id": "windows-editor",
+      "platform": "editor",
+      "rsp": { "root": "Library/Bee", "selectPlatform": "editor", "excludeNamePatterns": [".mvfrm."] },
+      "defines": { "add": [], "remove": ["TeamUI", "TeamUIDummy"] },
+      "assemblies": { "include": ["Assembly-CSharp"], "exclude": [] },
+      "allowHostFrameworkReferences": false
+    },
+    {
+      "id": "fixture",
+      "platform": "editor",
+      "rsp": { "root": "Library/Bee", "selectPlatform": "any", "excludeNamePatterns": [".mvfrm."] },
+      "defines": { "add": [], "remove": ["TeamUI", "TeamUIDummy"] },
+      "assemblies": { "include": ["*"], "exclude": [] },
+      "allowHostFrameworkReferences": true
+    },
+    {
+      "id": "fixture-android",
+      "platform": "android",
+      "rsp": { "root": "Library/Bee", "selectPlatform": "android", "excludeNamePatterns": [".mvfrm."] },
+      "defines": { "add": [], "remove": ["TeamUI", "TeamUIDummy", "APP_TEST", "UNITY_EDITOR"] },
+      "assemblies": { "include": ["*"], "exclude": [] },
+      "allowHostFrameworkReferences": true
+    }
+  ]
+}

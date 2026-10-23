@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: screenflow-mcp
+Version: 0.1.0
+Summary: ScreenFlow MCP 服务：只做调用层，把 MCP 工具参数映射为 ScreenFlow CLI 子进程调用。
+Requires-Python: >=3.11
+Requires-Dist: mcp<2,>=1.2
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"

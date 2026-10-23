@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.Core.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ScreenFlow.Core\ScreenFlow.Core.csproj" />
+    <!--
+      The resolution tests of T11 run against an index built from the MiniPos fixture, which needs
+      the real extractor. The dependency rules of 02 §1.1 are about the production assemblies and
+      are checked there; a test project that drives the whole pipeline has to see both ends of it.
+    -->
+    <ProjectReference Include="..\..\src\ScreenFlow.CSharp\ScreenFlow.CSharp.csproj" />
+    <!--
+      The graph tests of T18 need a full index: the traversal reads the domain tables the POS
+      adapters write. Same reasoning as the extractor reference above; the production
+      dependency rules are checked on the production assemblies.
+    -->
+    <ProjectReference Include="..\..\src\ScreenFlow.UnityPos\ScreenFlow.UnityPos.csproj" />
+    <!--
+      The external-extractor test starts IrEmitterHelper as a child process. ReferenceOutputAssembly
+      is false because the helper is run, not linked: linking it would defeat the point of proving
+      that the NDJSON wire contract alone is sufficient.
+    -->
+    <ProjectReference Include="..\IrEmitterHelper\IrEmitterHelper.csproj"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="none" />
+  </ItemGroup>
+
+</Project>

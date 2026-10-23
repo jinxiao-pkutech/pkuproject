@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.UnityPos</RootNamespace>
+    <AssemblyName>ScreenFlow.UnityPos</AssemblyName>
+    <!--
+      Domain adapters. Consume IR and resource files only (02 §1.1): no Roslyn, and no reference to
+      ScreenFlow.CSharp. That is what keeps the adapter mechanism reusable when the extractor is
+      replaced by one for another language.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScreenFlow.Core\ScreenFlow.Core.csproj" />
+  </ItemGroup>
+
+</Project>

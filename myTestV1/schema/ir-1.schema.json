@@ -1,0 +1,433 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://screenflow.local/schema/ir-1.schema.json",
+  "title": "ScreenFlow IR, version 1",
+  "description": "The language-neutral contract between a fact extractor and ScreenFlow.Core (02 section 5). Transport is NDJSON: one envelope object per line. Nulls are omitted; arrays are always written, because an absent array and an empty one would otherwise be indistinguishable and 'no candidates found' has to be expressible. ScreenFlow.Core validates every record with a hand-written validator rather than a schema library; this file is the published contract for extractor authors and a test asserts the two agree.",
+
+  "type": "object",
+  "required": ["k", "v"],
+  "additionalProperties": false,
+  "properties": {
+    "k": { "$ref": "#/$defs/recordKind" },
+    "v": { "type": "object" }
+  },
+  "allOf": [
+    { "if": { "properties": { "k": { "const": "meta" } }, "required": ["k"] },     "then": { "properties": { "v": { "$ref": "#/$defs/meta" } } } },
+    { "if": { "properties": { "k": { "const": "file" } }, "required": ["k"] },     "then": { "properties": { "v": { "$ref": "#/$defs/file" } } } },
+    { "if": { "properties": { "k": { "const": "symbol" } }, "required": ["k"] },   "then": { "properties": { "v": { "$ref": "#/$defs/symbol" } } } },
+    { "if": { "properties": { "k": { "const": "impl" } }, "required": ["k"] },     "then": { "properties": { "v": { "$ref": "#/$defs/impl" } } } },
+    { "if": { "properties": { "k": { "const": "callsite" } }, "required": ["k"] }, "then": { "properties": { "v": { "$ref": "#/$defs/callsite" } } } },
+    { "if": { "properties": { "k": { "const": "assign" } }, "required": ["k"] },   "then": { "properties": { "v": { "$ref": "#/$defs/assign" } } } },
+    { "if": { "properties": { "k": { "const": "creation" } }, "required": ["k"] }, "then": { "properties": { "v": { "$ref": "#/$defs/creation" } } } },
+    { "if": { "properties": { "k": { "const": "cfg" } }, "required": ["k"] },      "then": { "properties": { "v": { "$ref": "#/$defs/cfg" } } } },
+    { "if": { "properties": { "k": { "const": "marker" } }, "required": ["k"] },   "then": { "properties": { "v": { "$ref": "#/$defs/marker" } } } },
+    { "if": { "properties": { "k": { "const": "diag" } }, "required": ["k"] },     "then": { "properties": { "v": { "$ref": "#/$defs/diag" } } } }
+  ],
+
+  "$defs": {
+    "recordKind": {
+      "description": "02 section 5.1",
+      "enum": ["meta", "file", "symbol", "impl", "callsite", "assign", "creation", "cfg", "marker", "diag"]
+    },
+    "symbolKind": {
+      "enum": ["namespace", "type", "method", "field", "property", "event", "local"]
+    },
+    "typeKind": {
+      "enum": ["class", "interface", "struct", "enum", "delegate", "record"]
+    },
+    "modifier": {
+      "enum": ["static", "abstract", "virtual", "override", "sealed", "async", "partial", "readonly", "const", "extern"]
+    },
+    "encoding": {
+      "enum": ["utf-8-bom", "utf-8", "cp932"]
+    },
+    "derivation": {
+      "description": "'derived' means the Unity cache was produced for a platform other than the one the profile declares; every query result then carries the flag.",
+      "enum": ["native", "derived"]
+    },
+    "severity": {
+      "enum": ["error", "warning", "info"]
+    },
+    "markerDir": {
+      "enum": ["▼", "▲"]
+    },
+    "refKind": {
+      "enum": ["none", "ref", "out", "in"]
+    },
+    "valueKind": {
+      "description": "02 section 5.4",
+      "enum": [
+        "const", "strings", "template", "typeOf", "staticMember", "memberAccess", "this", "param",
+        "local", "elementAccess", "objectCreation", "tuple", "methodRef", "lambda", "callResult",
+        "conditional", "unknown"
+      ]
+    },
+    "conditionKind": {
+      "enum": ["if", "switchCase", "switchDefault", "ternary", "loop", "catch", "logicalRight"]
+    },
+    "conditionMode": {
+      "description": "'any' for A || B; 'all' for A && B or a single condition.",
+      "enum": ["all", "any"]
+    },
+    "stringTestOp": {
+      "enum": ["equals", "notEquals", "contains", "startsWith", "endsWith", "switchLabel"]
+    },
+
+    "symbolId": { "type": "string", "pattern": "^s_[0-9a-f]{20}$" },
+    "callsiteId": { "type": "string", "pattern": "^c_[0-9a-f]{20}$" },
+    "assignId": { "type": "string", "pattern": "^a_[0-9a-f]{20}$" },
+    "creationId": { "type": "string", "pattern": "^n_[0-9a-f]{20}$" },
+
+    "relativePath": {
+      "description": "Project-root relative, forward slashes (02 section 11.3). Absolute paths must never appear in output.",
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)[^\\\\]*$"
+    },
+
+    "span": {
+      "description": "1-based in both line and column (02 section 5.2).",
+      "type": "object",
+      "required": ["sl", "sc", "el", "ec"],
+      "additionalProperties": false,
+      "properties": {
+        "sl": { "type": "integer", "minimum": 1 },
+        "sc": { "type": "integer", "minimum": 1 },
+        "el": { "type": "integer", "minimum": 1 },
+        "ec": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "typeRef": {
+      "description": "'id' is absent when the extractor could not bind the type; only the name is then known.",
+      "type": "object",
+      "required": ["fqName"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/symbolId" },
+        "fqName": { "type": "string" },
+        "args": { "type": "array", "items": { "$ref": "#/$defs/typeRef" } }
+      }
+    },
+
+    "arg": {
+      "description": "Aligned by parameter, not by source position: a named argument sits at its parameter's index and an omitted optional parameter does not appear (02 section 5.4).",
+      "type": "object",
+      "required": ["paramIndex", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "paramName": { "type": "string" },
+        "paramIndex": { "type": "integer", "minimum": 0 },
+        "value": { "$ref": "#/$defs/value" }
+      }
+    },
+
+    "memberInit": {
+      "type": "object",
+      "required": ["name", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "symbolId": { "$ref": "#/$defs/symbolId" },
+        "value": { "$ref": "#/$defs/value" }
+      }
+    },
+
+    "stringTest": {
+      "type": "object",
+      "required": ["subject", "op", "literal"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "$ref": "#/$defs/value" },
+        "op": { "$ref": "#/$defs/stringTestOp" },
+        "literal": { "type": "string" }
+      }
+    },
+
+    "condition": {
+      "description": "02 section 5.7. 'approximate' is set for every condition in a method containing goto or a label, because the structured ancestor chain is then incomplete.",
+      "type": "object",
+      "required": ["kind", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "$ref": "#/$defs/conditionKind" },
+        "polarity": { "type": "boolean" },
+        "mode": { "$ref": "#/$defs/conditionMode" },
+        "text": { "type": "string" },
+        "tests": { "type": "array", "items": { "$ref": "#/$defs/stringTest" } },
+        "span": { "$ref": "#/$defs/span" },
+        "approximate": { "type": "boolean" }
+      }
+    },
+
+    "value": {
+      "description": "02 section 5.4. Nesting depth must not exceed 6; a deeper expression is emitted as kind 'unknown' rather than truncated. Every value carries 'text' (source text, at most 200 characters) and an optional 'type'.",
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/valueKind" },
+        "text": { "type": "string", "maxLength": 200 },
+        "type": { "$ref": "#/$defs/typeRef" },
+
+        "value": { "type": ["string", "number", "boolean", "null"] },
+        "values": {
+          "description": "Sorted and de-duplicated; at most 16. Beyond that the extractor emits 'template' instead of an incomplete set.",
+          "type": "array",
+          "items": { "type": "string" },
+          "maxItems": 16
+        },
+        "template": { "type": "string" },
+        "typeId": { "$ref": "#/$defs/symbolId" },
+        "symbolId": { "$ref": "#/$defs/symbolId" },
+        "path": { "type": "array", "items": { "type": "string" } },
+        "receiver": { "$ref": "#/$defs/value" },
+        "methodId": { "$ref": "#/$defs/symbolId" },
+        "index": {},
+        "name": { "type": "string" },
+        "origin": { "$ref": "#/$defs/value" },
+        "isLoopIndex": { "type": "boolean" },
+        "loopBound": { "$ref": "#/$defs/value" },
+        "ctorId": { "$ref": "#/$defs/symbolId" },
+        "args": { "type": "array", "items": { "$ref": "#/$defs/arg" } },
+        "members": { "type": "array", "items": { "$ref": "#/$defs/memberInit" } },
+        "elements": {
+          "description": "Each collection-initialiser element is the argument list passed to Add.",
+          "type": "array",
+          "items": { "type": "array", "items": { "$ref": "#/$defs/value" } }
+        },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/value" } },
+        "callsiteId": { "$ref": "#/$defs/callsiteId" },
+        "targetId": { "$ref": "#/$defs/symbolId" },
+        "typeArgs": { "type": "array", "items": { "$ref": "#/$defs/typeRef" } },
+        "whenTrue": { "$ref": "#/$defs/value" },
+        "whenFalse": { "$ref": "#/$defs/value" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "template" } }, "required": ["kind"] }, "then": { "required": ["template"] } },
+        { "if": { "properties": { "kind": { "const": "strings" } }, "required": ["kind"] }, "then": { "required": ["values"] } },
+        { "if": { "properties": { "kind": { "const": "param" } }, "required": ["kind"] }, "then": { "required": ["methodId", "index", "name"] } },
+        { "if": { "properties": { "kind": { "const": "local" } }, "required": ["kind"] }, "then": { "required": ["name"] } },
+        { "if": { "properties": { "kind": { "const": "memberAccess" } }, "required": ["kind"] }, "then": { "required": ["receiver"] } },
+        { "if": { "properties": { "kind": { "const": "elementAccess" } }, "required": ["kind"] }, "then": { "required": ["receiver", "index"] } },
+        { "if": { "properties": { "kind": { "const": "methodRef" } }, "required": ["kind"] }, "then": { "required": ["methodId"] } },
+        { "if": { "properties": { "kind": { "const": "lambda" } }, "required": ["kind"] }, "then": { "required": ["methodId"] } },
+        { "if": { "properties": { "kind": { "const": "conditional" } }, "required": ["kind"] }, "then": { "required": ["whenTrue", "whenFalse"] } }
+      ]
+    },
+
+    "meta": {
+      "description": "Exactly one per extraction, emitted first (02 section 5.8).",
+      "type": "object",
+      "required": ["irVersion", "extractor", "profileId", "derivation"],
+      "additionalProperties": false,
+      "properties": {
+        "irVersion": { "const": "1" },
+        "extractor": { "type": "string", "minLength": 1 },
+        "profileId": { "type": "string", "minLength": 1 },
+        "unityDeclared": { "type": "string" },
+        "unityCache": { "type": "string" },
+        "platformDetected": { "type": "string" },
+        "derivation": { "$ref": "#/$defs/derivation" }
+      }
+    },
+
+    "file": {
+      "type": "object",
+      "required": ["path", "assembly", "encoding", "lineCount", "contentHash"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "assembly": { "type": "string", "minLength": 1 },
+        "encoding": { "$ref": "#/$defs/encoding" },
+        "lineCount": { "type": "integer", "minimum": 0 },
+        "contentHash": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "symbol": {
+      "description": "02 section 5.2. 'file' and 'span' are required when isSource is true: a source fact that cannot be cited is not usable as evidence.",
+      "type": "object",
+      "required": ["id", "kind", "name", "fqName", "assembly", "isSource"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/symbolId" },
+        "kind": { "$ref": "#/$defs/symbolKind" },
+        "name": { "type": "string", "minLength": 1 },
+        "fqName": { "type": "string", "minLength": 1 },
+        "containerId": { "$ref": "#/$defs/symbolId" },
+        "namespace": { "type": "string" },
+        "assembly": { "type": "string", "minLength": 1 },
+        "isSource": { "type": "boolean" },
+        "file": { "$ref": "#/$defs/relativePath" },
+        "span": { "$ref": "#/$defs/span" },
+        "typeKind": { "$ref": "#/$defs/typeKind" },
+        "baseTypeId": { "$ref": "#/$defs/symbolId" },
+        "interfaceIds": { "type": "array", "items": { "$ref": "#/$defs/symbolId" } },
+        "modifiers": { "type": "array", "items": { "$ref": "#/$defs/modifier" } },
+        "typeRef": { "$ref": "#/$defs/typeRef" },
+        "returnType": { "$ref": "#/$defs/typeRef" },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "$ref": "#/$defs/typeRef" },
+              "refKind": { "$ref": "#/$defs/refKind" }
+            }
+          }
+        },
+        "typeParameters": { "type": "array", "items": { "type": "string" } },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["typeFqName"],
+            "additionalProperties": false,
+            "properties": {
+              "typeFqName": { "type": "string" },
+              "args": { "type": "array", "items": { "$ref": "#/$defs/value" } }
+            }
+          }
+        },
+        "initializer": { "$ref": "#/$defs/value" },
+        "constantValue": { "type": ["string", "number", "boolean", "null"] },
+        "overridesId": { "$ref": "#/$defs/symbolId" },
+        "isLambda": { "type": "boolean" },
+        "isLocalFunction": { "type": "boolean" },
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "isCompilerCertain": { "type": "boolean" },
+        "declarations": {
+          "description": "Every declaration site; a partial type has more than one.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "span"],
+            "additionalProperties": false,
+            "properties": {
+              "file": { "$ref": "#/$defs/relativePath" },
+              "span": { "$ref": "#/$defs/span" }
+            }
+          }
+        }
+      },
+      "if": { "properties": { "isSource": { "const": true } }, "required": ["isSource"] },
+      "then": { "required": ["file", "span"] }
+    },
+
+    "impl": {
+      "description": "02 section 5.3. Recorded rather than inferred, because the implementing member may live on a base class.",
+      "type": "object",
+      "required": ["typeId", "interfaceMemberId", "implMemberId"],
+      "additionalProperties": false,
+      "properties": {
+        "typeId": { "$ref": "#/$defs/symbolId" },
+        "interfaceMemberId": { "$ref": "#/$defs/symbolId" },
+        "implMemberId": { "$ref": "#/$defs/symbolId" }
+      }
+    },
+
+    "callsite": {
+      "type": "object",
+      "required": ["id", "callerId", "order", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/callsiteId" },
+        "callerId": { "$ref": "#/$defs/symbolId" },
+        "targetId": { "$ref": "#/$defs/symbolId" },
+        "targetIsVirtual": { "type": "boolean" },
+        "receiver": { "$ref": "#/$defs/value" },
+        "typeArgs": { "type": "array", "items": { "$ref": "#/$defs/typeRef" } },
+        "args": { "type": "array", "items": { "$ref": "#/$defs/arg" } },
+        "isAwaited": { "type": "boolean" },
+        "isConditionalAccess": { "type": "boolean" },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+        "reachable": { "type": "boolean" },
+        "order": { "type": "integer", "minimum": 0 },
+        "span": { "$ref": "#/$defs/span" }
+      }
+    },
+
+    "assign": {
+      "description": "Includes event subscription (x.clicked += h), where the target is a memberAccess pointing at the event symbol. A field or property initialiser does not produce an assign; it lives on symbol.initializer.",
+      "type": "object",
+      "required": ["id", "methodId", "target", "operator", "value", "order", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/assignId" },
+        "methodId": { "$ref": "#/$defs/symbolId" },
+        "target": { "$ref": "#/$defs/value" },
+        "operator": { "type": "string", "minLength": 1 },
+        "value": { "$ref": "#/$defs/value" },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+        "reachable": { "type": "boolean" },
+        "order": { "type": "integer", "minimum": 0 },
+        "span": { "$ref": "#/$defs/span" }
+      }
+    },
+
+    "creation": {
+      "description": "One per creation expression, even when the same value already appears inside another record, so that 'who created what' is answerable directly.",
+      "type": "object",
+      "required": ["id", "methodId", "value", "order", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/creationId" },
+        "methodId": { "$ref": "#/$defs/symbolId" },
+        "value": {
+          "allOf": [
+            { "$ref": "#/$defs/value" },
+            { "properties": { "kind": { "const": "objectCreation" } }, "required": ["kind"] }
+          ]
+        },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+        "reachable": { "type": "boolean" },
+        "order": { "type": "integer", "minimum": 0 },
+        "span": { "$ref": "#/$defs/span" }
+      }
+    },
+
+    "cfg": {
+      "type": "object",
+      "required": ["methodId", "blockCount"],
+      "additionalProperties": false,
+      "properties": {
+        "methodId": { "$ref": "#/$defs/symbolId" },
+        "blockCount": { "type": "integer", "minimum": 0 },
+        "hasGoto": { "type": "boolean" },
+        "unreachableSpans": { "type": "array", "items": { "$ref": "#/$defs/span" } }
+      }
+    },
+
+    "marker": {
+      "description": "Reporting metadata only: comment text is never a parsing fact. The date is stored as written and not validated.",
+      "type": "object",
+      "required": ["file", "line", "dir", "kind", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "$ref": "#/$defs/relativePath" },
+        "line": { "type": "integer", "minimum": 1 },
+        "dir": { "$ref": "#/$defs/markerDir" },
+        "kind": { "type": "string", "minLength": 1 },
+        "date": { "type": "string" },
+        "author": { "type": "string" },
+        "issueRefs": { "type": "array", "items": { "type": "string" } },
+        "text": { "type": "string" }
+      }
+    },
+
+    "diag": {
+      "type": "object",
+      "required": ["severity", "code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "severity": { "$ref": "#/$defs/severity" },
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "file": { "$ref": "#/$defs/relativePath" },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

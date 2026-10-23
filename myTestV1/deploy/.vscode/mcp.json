@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "screenflow": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "screenflow_mcp"],
+      "env": {
+        "SCREENFLOW_CLI": "${workspaceFolder}/issue-unit-test-preparation-agent_assets/myTestV1/publish/screenflow.exe",
+        "SCREENFLOW_DB_DIR": "${workspaceFolder}/sej_client_pos_unity/.screenflow",
+        "SCREENFLOW_PROFILE": "android-onsite",
+        "SCREENFLOW_PROJECT": "${workspaceFolder}/sej_client_pos_unity",
+        "PYTHONPATH": "${workspaceFolder}/issue-unit-test-preparation-agent_assets/myTestV1/python"
+      }
+    }
+  }
+}

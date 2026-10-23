@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "screenflow-mcp"
+version = "0.1.0"
+description = "ScreenFlow MCP 服务：只做调用层，把 MCP 工具参数映射为 ScreenFlow CLI 子进程调用。"
+requires-python = ">=3.11"
+dependencies = ["mcp>=1.2,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["screenflow_mcp*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

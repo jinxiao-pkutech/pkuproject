@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Name: StringLocalizationTable_Customer Shared Data
+  m_TableCollectionName: StringLocalizationTable_Customer
+  m_TableCollectionNameGuidString: 0ab1ff5b57ed1034289898a6733b77ac
+  m_Entries:
+  - m_Id: 3342562431001
+    m_Key: SSAW0903_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562431002
+    m_Key: SSAW0903_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562431006
+    m_Key: SSAW0903_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562431007
+    m_Key: SSAW0903_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562431035
+    m_Key: SSAW0903_12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562439071
+    m_Key: SSAW0907_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562439072
+    m_Key: SSAW0907_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562439073
+    m_Key: SSAW0907_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562439074
+    m_Key: SSAW0907_4
+    m_Metadata:
+      m_Items: []

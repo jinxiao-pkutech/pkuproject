@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.CSharp</RootNamespace>
+    <AssemblyName>ScreenFlow.CSharp</AssemblyName>
+    <!-- The only project allowed to see Roslyn (02 §1.1). Must not reference ScreenFlow.UnityPos. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScreenFlow.Core\ScreenFlow.Core.csproj" />
+  </ItemGroup>
+
+</Project>

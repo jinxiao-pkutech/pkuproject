@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ScreenFlow.Cli</RootNamespace>
+    <AssemblyName>screenflow</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScreenFlow.Core\ScreenFlow.Core.csproj" />
+    <ProjectReference Include="..\ScreenFlow.CSharp\ScreenFlow.CSharp.csproj" />
+    <ProjectReference Include="..\ScreenFlow.UnityPos\ScreenFlow.UnityPos.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      The configuration files ship next to the executable so that the CLI can be run from the
+      publish directory without the repository present. The glob tolerates an empty config/
+      directory, which is the state until T01 adds the files.
+    -->
+    <Content Include="..\..\config\*.json"
+             Link="config\%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1",
+  "terminals": [
+    { "id": "employee", "peer": "customer" },
+    { "id": "customer", "peer": "employee" }
+  ],
+  "screens": {
+    "screenIdType": { "type": "ScreenID", "file": "Assets/Common/View/Script/Utilities_s3/ScreenID.cs" },
+    "idArgIndex": 0,
+    "nameArgIndex": 1,
+    "isPopUpParamName": "isPopUp",
+    "idProperty": "Id",
+    "registries": [
+      { "terminal": "employee", "type": "Scene_PosRegister_View", "file": "Assets/ScenePosRegister/Common/View/Script/Scene_PosRegister_View.cs", "field": "InitDictionary", "viewTupleIndex": 0, "presenterTupleIndex": 1 },
+      { "terminal": "customer", "type": "Scene_Customer_View", "file": "Assets/SceneCustomer/Common/View/Script/Scene_Customer_View.cs", "field": "InitDictionary", "viewTupleIndex": 0, "presenterTupleIndex": 1 }
+    ],
+    "standbyScreens": [ { "terminal": "employee", "screenId": "SSAW0001" } ],
+    "domainHandledReflectionMethods": [
+      { "type": "Scene_PosRegister_View", "file": "Assets/ScenePosRegister/Common/View/Script/Scene_PosRegister_View.cs", "member": "InstanceScreenInit" },
+      { "type": "Scene_PosRegister_View", "file": "Assets/ScenePosRegister/Common/View/Script/Scene_PosRegister_View.cs", "member": "InstancePopup" },
+      { "type": "Scene_Customer_View", "file": "Assets/SceneCustomer/Common/View/Script/Scene_Customer_View.cs", "member": "InstanceScreenInit" },
+      { "type": "TcpPresenter", "file": "Assets/SceneCustomer/Common/Presenter/Script/Tcp/TcpPresenter.cs", "member": "*" },
+      { "type": "TcpPresenter", "file": "Assets/ScenePosRegister/Common/Presenter/Script/TcpPresenter.cs", "member": "*" }
+    ]
+  },
+  "enumerations": {
+    "baseType": { "fqName": "Assets.Common.Script.Base.Enumeration" },
+    "idArgIndex": 0,
+    "nameArgIndex": 1
+  },
+  "navigation": {
+    "managerType": { "type": "BaseScreenManager", "file": "Assets/Common/Script/Base/BaseScreenManager.cs" },
+    "displayMethods": ["DisplayTargetScreen", "DisplayTargetPopup", "ShowTargetPopup"],
+    "closeMethods": ["HideCurrentPopup", "HidePreviousPopup", "NoneDisplayAllPopup"],
+    "screenArgIndex": 0
+  },
+  "tcp": {
+    "sendMethods": [
+      { "type": "TcpModel", "file": "Assets/Common/Model/Script/Tcp/TcpModel.cs", "member": "SslSend" },
+      { "type": "TcpModel", "file": "Assets/Common/Model/Script/Tcp/TcpModel.cs", "member": "SslContentsSend" }
+    ],
+    "eventPathParamName": "eventPath",
+    "payloadParamName": "socketRequestData",
+    "payloadType": { "type": "SocketRequestData", "file": "Assets/Common/Model/Script/Tcp/SocketRequestData.cs" },
+    "payloadEventIdProperty": "EventID",
+    "payloadTargetIdProperty": "TargetID",
+    "commonEventIdPrefix": "Common",
+    "displayEventIds": {
+      "Common.Display": "screen",
+      "Common.DisplayPopup": "popup",
+      "Common.DisplayPopupAbove": "popup",
+      "Common.DisplayPopupFirstCloseAfter": "popup",
+      "Common.DisplayGuidancePopup": "popup",
+      "Common.OpenFullSelfGuidance": "popup"
+    },
+    "closeEventIds": ["Common.ClosePopup", "Common.ClosePopupPrevious"],
+    "displayEventIdsVerifiedTerminals": ["customer"],
+    "receiverInterfaceMethod": "OnReceiveSocket",
+    "receiverRegistrationMethod": "SetBaseSocketEventHandler",
+    "eventPathIndexerKey": "EventPath",
+    "receiveDeferred": true
+  },
+  "keyseq": {
+    "recordType": { "fqName": "TEC.SEJPOS.Model.Apl.KeySeq.KeySeqTableRecord" },
+    "recordPsCodeArgIndex": 0, "recordFuncArgIndex": 1, "recordNextStageArgIndex": 2,
+    "registerType": { "fqName": "TEC.SEJPOS.Model.Apl.KeySeq.IKeySeqRegister" },
+    "registerMethods": [ { "name": "Add", "stageArgIndex": 0, "tableArgIndex": 1 }, { "name": "AddSub", "stageArgIndex": 0, "tableArgIndex": 1, "subTableArgIndex": 2 } ],
+    "executeMethods": [ { "type": "KeySeqModel", "file": "Assets/Common/Model/Script/KeySeq/KeySeqModel.cs", "member": "ExeKeyProc" } ],
+    "requestPsCodeProperty": "PsCode",
+    "stageType": { "fqName": "TEC.SEJPOS.Model.Apl.KeySeq.StageNo" },
+    "psCodeType": { "fqName": "TEC.SEJPOS.Model.Apl.KeySeq.PsCode" },
+    "dispatcherNote": "先设置下一 Stage 再执行处理函数；处理函数失败或异常时恢复旧 Stage"
+  },
+  "di": {
+    "locatorType": { "fqName": "TEC.SEJPOS.Model.ServiceLocator" },
+    "getMethods": ["GetService"],
+    "getAllMethods": ["GetServices"],
+    "registrationMethods": ["AddSingleton", "AddTransient", "AddScoped"],
+    "factoryResolveMethods": ["GetRequiredService", "GetService"]
+  },
+  "device": {
+    "commandInterfaces": { "namespace": "TEC.SEJPOS.Model.DeviceBroker", "dir": "Assets/PosModule/DeviceBroker", "typeNamePattern": "^I.*Command$", "typeKind": "interface" },
+    "callbackMethods": ["OnMessageReceived"],
+    "receiveEventSetters": ["SetReceiveEvent"],
+    "topicMethods": ["GetTopic"]
+  },
+  "api": {
+    "connectorType": { "type": "IApiConnector", "file": "Assets/Common/Script/API/IApiConnector.cs" },
+    "sendMethods": ["SendMicroserviceRequest", "SendMicroserviceRequestSync", "SendMicroserviceRequestTemp"],
+    "requestType": { "type": "ApiRequest", "fileGlob": "Assets/Common/Script/**/ApiRequest.cs" },
+    "apiKeyParamNames": ["apiKey", "keyName"],
+    "localMockDir": "Assets/StreamingAssets/MSLocal"
+  },
+  "native": {
+    "javaTypes": ["UnityEngine.AndroidJavaObject", "UnityEngine.AndroidJavaClass"],
+    "dllImportAttribute": "System.Runtime.InteropServices.DllImportAttribute"
+  },
+  "sql": {
+    "statementPattern": "^\\s*(SELECT|INSERT|UPDATE|DELETE|REPLACE|WITH)\\b",
+    "minLength": 12
+  },
+  "queue": {
+    "enqueueMethods": [ { "fileGlob": "Assets/Common/Script/Queueing/**/*.cs", "type": "*", "member": "AddQueue" } ],
+    "requestType": { "type": "ElementRequest", "fileGlob": "Assets/Common/Script/Queueing/**/*.cs" },
+    "lambdaArgIndex": 0
+  },
+  "deferredInvokers": [ "System.Threading.Tasks.Task.Run", "Cysharp.Threading.Tasks.UniTask.Run", "Cysharp.Threading.Tasks.UniTask.Void" ],
+  "ui": {
+    "controlQueryMethods": ["Query", "Q"],
+    "clickEvents": ["clicked"],
+    "viewEventHandlerField": "eventHandler",
+    "autoEntryMethods": ["OnDisplay"],
+    "scanEntryMethods": ["OnScan"],
+    "scanRegistrationMethod": "SetBaseOnScanEventHandler",
+    "textKeyProperties": ["LocalizationKey", "TitleButton", "Title", "MessageText", "Unit"],
+    "initJsonDir": "Assets/Common/View/Resources/ScreenInitialize",
+    "initJsonNamePattern": "{ViewWithoutSuffix}_Initialize.json",
+    "viewSuffix": "_View",
+    "elementDtoSuffix": "_Element_DTO",
+    "constraintMethods": {
+      "SetInputMaxNumberOfCharacter": "maxDigits",
+      "SetInputMaxValue": "maxValue",
+      "SetInputMinValue": "minValue",
+      "SetInputAllowEmptyString": "allowEmpty"
+    },
+    "constraintValueArgIndex": 0,
+    "constraintMessageArgIndex": 1,
+    "errorMessageGetters": [ { "type": "Common_Application_Model", "file": "Assets/Common/Model/Script/Common_Application_Model.cs", "member": "OnGetErrPopupType1" } ],
+    "errorCodeType": { "type": "ResultStatusCode", "fileGlob": "Assets/**/ResultStatusCode*.cs" }
+  },
+  "resources": {
+    "uxmlGlob": "Assets/**/*.uxml",
+    "stringTableRoot": "Assets/Localization/StringTable",
+    "stringTableSearchOrder": {
+      "customer": ["StringLocalizationTable_Customer", "StringLocalizationTable_Common"],
+      "employee": ["StringLocalizationTable_PosRegister", "StringLocalizationTable_Common"]
+    },
+    "errorMessageJson": "Assets/StreamingAssets/ErrMsg/ErrMsgType1_Initialize.json",
+    "errorMessageLocaleFields": {
+      "ja": "Msg", "ja-selfpos": "SelfPosMsg", "ja-hira": "Msg_Hiragana",
+      "en": "SelfPosMsg_EN", "ko": "SelfPosMsg_KR", "zh-Hans": "SelfPosMsg_CN1", "zh-Hant": "SelfPosMsg_CN2"
+    },
+    "defaultLocale": "ja"
+  },
+  "traversal": {
+    "maxChainDepth": 40,
+    "maxCandidatesPerDispatch": 12,
+    "maxChainsPerScreenEdge": 3,
+    "maxParamPropagationDepth": 2,
+    "doNotDescendNamespaces": ["System", "UnityEngine", "UnityEditor", "Cysharp", "Microsoft", "Newtonsoft", "MQTTnet"]
+  },
+  "changeMarkers": {
+    "pattern": "^\\s*//\\s*(?<dir>[▼▲])\\s*(?<kind>ADD|CHG|UPD|MOD|DEL)\\b\\s*(?<rest>.*)$"
+  }
+}

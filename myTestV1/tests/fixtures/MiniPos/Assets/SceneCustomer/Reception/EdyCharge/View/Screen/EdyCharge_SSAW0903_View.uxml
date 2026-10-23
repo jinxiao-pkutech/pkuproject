@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/SceneCustomer/Reception/EdyCharge/View/Screen/EdyCharge_SSAW0903_View.uss?fileID=7433441132597879392&amp;guid=2b0f0e1f1a3b4c5d6e7f8a9b0c1d2e3f&amp;type=3#EdyCharge_SSAW0903_View" />
+    <Assets.Common.Script.Localization.Control.LocalizeImage name="popup_background" picking-mode="Ignore">
+        <ui:VisualElement name="EdyCharge_SSAW0903_View" picking-mode="Ignore">
+            <Assets.Common.Script.Localization.Control.LocalizeLabel name="Title" enable-rich-text="true" />
+            <Assets.Common.View.Parts.BTN18_ButtonBack focusable="true" name="btnClose" Size="S_200x80" Enabled="true" />
+            <Assets.Common.View.Parts.BTN20_ButtonTextOnly focusable="true" name="selectCharge_1000" Size="S_400x120" Enabled="true">
+                <Assets.Common.Script.Localization.Control.LocalizeImage name="moneyLabel" picking-mode="Ignore">
+                    <Assets.Common.Script.Localization.Control.LocalizeLabel name="MoneyAmountLabel" enable-rich-text="true" />
+                    <Assets.Common.Script.Localization.Control.LocalizeLabel name="MoneyUnitLabel" enable-rich-text="true" />
+                </Assets.Common.Script.Localization.Control.LocalizeImage>
+            </Assets.Common.View.Parts.BTN20_ButtonTextOnly>
+            <Assets.Common.View.Parts.BTN20_ButtonTextOnly focusable="true" name="selectCharge_2000" Size="S_400x120" Enabled="true">
+                <Assets.Common.Script.Localization.Control.LocalizeImage name="moneyLabel" picking-mode="Ignore">
+                    <Assets.Common.Script.Localization.Control.LocalizeLabel name="MoneyAmountLabel" enable-rich-text="true" />
+                    <Assets.Common.Script.Localization.Control.LocalizeLabel name="MoneyUnitLabel" enable-rich-text="true" />
+                </Assets.Common.Script.Localization.Control.LocalizeImage>
+            </Assets.Common.View.Parts.BTN20_ButtonTextOnly>
+            <Assets.Common.View.Parts.BTN20_ButtonTextOnly focusable="true" name="selectCharge_Other" Size="S_400x120" Enabled="true">
+                <Assets.Common.Script.Localization.Control.LocalizeImage name="moneyLabel" picking-mode="Ignore">
+                    <Assets.Common.Script.Localization.Control.LocalizeLabel name="MoneyOtherLabel" enable-rich-text="true" />
+                </Assets.Common.Script.Localization.Control.LocalizeImage>
+            </Assets.Common.View.Parts.BTN20_ButtonTextOnly>
+        </ui:VisualElement>
+    </Assets.Common.Script.Localization.Control.LocalizeImage>
+</ui:UXML>

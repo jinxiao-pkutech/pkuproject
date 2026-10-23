@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ScreenFlow.Architecture.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Core and UnityPos are referenced so their assemblies can be loaded and their metadata
+      references inspected. ScreenFlow.CSharp is deliberately NOT referenced here: the test asserts
+      that UnityPos does not depend on it, and keeping it out of this project makes an accidental
+      transitive reference impossible to mistake for a passing test.
+    -->
+    <ProjectReference Include="..\..\src\ScreenFlow.Core\ScreenFlow.Core.csproj" />
+    <ProjectReference Include="..\..\src\ScreenFlow.UnityPos\ScreenFlow.UnityPos.csproj" />
+  </ItemGroup>
+
+</Project>

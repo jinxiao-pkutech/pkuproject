@@ -1,0 +1,248 @@
+{
+  "items": [
+    {
+      "id": "A-01",
+      "profile": "fixture",
+      "command": ["index", "build", "--project", "{project}", "--profile", "{profile}", "--db", "{db}"],
+      "assert": {
+        "op": "and",
+        "rules": [
+          {"op": "equals", "path": "ok", "value": true},
+          {"op": "equals", "path": "data.derivation", "value": "native"},
+          {"op": "equals", "path": "data.disabledFeatures", "value": []}
+        ]
+      }
+    },
+    {
+      "id": "A-02",
+      "profile": "windows-editor",
+      "command": ["index", "build", "--project", "{project}", "--profile", "{profile}", "--db", "{db}"],
+      "assert": {"op": "equals", "path": "ok", "value": true}
+    },
+    {
+      "id": "A-03",
+      "profile": "fixture",
+      "steps": [
+        {
+          "command": ["screen", "get", "--id", "SSAW0903", "--db", "{db}"],
+          "assert": {
+            "op": "and",
+            "rules": [
+              {"op": "equals", "path": "ok", "value": true},
+              {"op": "equals", "path": "data.terminal", "value": "customer"},
+              {"op": "equals", "path": "data.name", "value": "Edy現金チャージ額指定（客面残高不足）"}
+            ]
+          }
+        },
+        {
+          "command": ["screen", "get", "--id", "SSAW0907", "--db", "{db}"],
+          "assert": {
+            "op": "and",
+            "rules": [
+              {"op": "equals", "path": "ok", "value": true},
+              {"op": "equals", "path": "data.terminal", "value": "customer"},
+              {"op": "equals", "path": "data.name", "value": "Edy現金チャージ額入力（客面残高不足）"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "A-04",
+      "profile": "fixture",
+      "command": ["screen", "controls", "--id", "SSAW0903", "--locale", "ja", "--db", "{db}"],
+      "assert": {
+        "op": "and",
+        "rules": [
+          {"op": "equals", "path": "ok", "value": true},
+          {
+            "op": "contains",
+            "path": "data.controls",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "equals", "path": "controlId", "value": "selectCharge_Other"},
+                {"op": "equals", "path": "text.key", "value": "SSAW0903_12"},
+                {"op": "equals", "path": "text.plain", "value": "その他の金額を入力\n(1,000円単位)"}
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "A-05",
+      "profile": "fixture",
+      "command": ["screen", "constraints", "--id", "SSAW0907", "--locale", "ja", "--db", "{db}"],
+      "assert": {
+        "op": "and",
+        "rules": [
+          {"op": "equals", "path": "ok", "value": true},
+          {
+            "op": "contains",
+            "path": "data.constraints",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "equals", "path": "kind", "value": "maxValue"},
+                {"op": "equals", "path": "value", "value": "25"},
+                {"op": "equals", "path": "errorMessage.plain", "value": "登録できない数です"}
+              ]
+            }
+          },
+          {
+            "op": "contains",
+            "path": "data.constraints",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "equals", "path": "kind", "value": "maxDigits"},
+                {"op": "equals", "path": "value", "value": "2"},
+                {"op": "equals", "path": "errorMessage.plain", "value": "数が大きすぎます"}
+              ]
+            }
+          },
+          {
+            "op": "contains",
+            "path": "data.constraints",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "equals", "path": "kind", "value": "allowEmpty"},
+                {"op": "equals", "path": "value", "value": "false"},
+                {"op": "equals", "path": "errorMessage.plain", "value": "金額を入力して下さい"}
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "A-06",
+      "profile": "fixture",
+      "command": ["path", "find", "--from", "SSAW0903", "--to", "SSAW0907", "--detail", "full", "--db", "{db}"],
+      "assert": {
+        "op": "and",
+        "rules": [
+          {"op": "equals", "path": "ok", "value": true},
+          {"op": "count>=", "path": "data.paths", "value": 1},
+          {"op": "equals", "path": "data.paths[0].overallConfidence", "value": "candidate"},
+          {"op": "count>=", "path": "data.paths[0].hops[0].edges", "value": 2},
+          {
+            "op": "contains",
+            "path": "data.paths[0].hops[0].edges",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "contains", "path": "chain", "where": {"op": "equals", "path": "type", "value": "Payment_SSAW0089_Presenter"}},
+                {"op": "contains", "path": "chain", "where": {"op": "contains", "path": "detail", "value": "SSAW0903.To.SSAW0907"}}
+              ]
+            }
+          },
+          {
+            "op": "contains",
+            "path": "data.paths[0].hops[0].edges",
+            "where": {
+              "op": "and",
+              "rules": [
+                {"op": "contains", "path": "chain", "where": {"op": "equals", "path": "type", "value": "EdyCharge_SSAW0281_Presenter"}},
+                {"op": "contains", "path": "chain", "where": {"op": "contains", "path": "detail", "value": "ToSSAW0907"}}
+              ]
+            }
+          },
+          {
+            "op": "contains",
+            "path": "data.paths[0].breaks",
+            "where": {"op": "equals", "path": "category", "value": "TerminalTcpCurrentScreen"}
+          }
+        ]
+      }
+    },
+    {
+      "id": "A-07",
+      "profile": "fixture",
+      "steps": [
+        {
+          "command": ["path", "prefix", "--to", "SSAW0903", "--db", "{db}"],
+          "assert": {
+            "op": "and",
+            "rules": [
+              {"op": "equals", "path": "ok", "value": true},
+              {
+                "op": "or",
+                "rules": [
+                  {"op": "count>=", "path": "data.paths", "value": 1},
+                  {"op": "count>=", "path": "data.partialPaths", "value": 1}
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "command": ["debug", "sends", "--target-screen", "SSAW0903", "--db", "{db}"],
+          "assert": {
+            "op": "contains",
+            "path": "data",
+            "where": {"op": "equals", "path": "type", "value": "Payment_SSAW0089_Presenter"}
+          }
+        }
+      ]
+    },
+    {
+      "id": "A-08",
+      "profile": "fixture",
+      "command": ["break", "list", "--category", "ExternalHardware", "--db", "{db}"],
+      "assert": {
+        "op": "contains",
+        "path": "data",
+        "where": {
+          "op": "and",
+          "rules": [
+            {"op": "contains", "path": "contract.key", "value": "IEValueRwCommand"},
+            {"op": "contains", "path": "contract.responseType", "value": "EvRwHttpResponse"},
+            {"op": "contains", "path": "contract.topicTemplate", "value": "shared-bus-"},
+            {
+              "op": "contains",
+              "path": "resume.candidates",
+              "where": {
+                "op": "and",
+                "rules": [
+                  {"op": "equals", "path": "type", "value": "EValueRwController"},
+                  {"op": "equals", "path": "method", "value": "OnMessageReceived"}
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "A-09",
+      "profile": "fixture",
+      "command": ["message", "get", "--code", "ERRB022", "--locale", "ja", "--db", "{db}"],
+      "assert": {
+        "op": "and",
+        "rules": [
+          {"op": "equals", "path": "ok", "value": true},
+          {"op": "equals", "path": "data.plain", "value": "登録できない数です"}
+        ]
+      }
+    },
+    {"id": "A-10", "profile": "fixture", "cross": "determinism"},
+    {"id": "A-11", "profile": "fixture", "cross": "tcp_sends"},
+    {"id": "A-12", "profile": "fixture", "cross": "remote_display"},
+    {"id": "A-13", "profile": "fixture", "cross": "keyseq"},
+    {"id": "A-14", "profile": "fixture", "cross": "screens", "registered": 5},
+    {"id": "A-15", "profile": "fixture", "cross": "teamui"},
+    {
+      "id": "A-16",
+      "profile": "fixture",
+      "cross": "comment_exclusion",
+      "file": "Assets/ScenePosRegister/Payment/Presenter/Script/Payment_SSAW0089_Presenter.cs",
+      "line": 52
+    },
+    {"id": "A-17", "profile": "fixture", "cross": "performance"},
+    {"id": "A-18", "profile": "fixture", "cross": "mcp_selftest"},
+    {"id": "A-19", "profile": "fixture", "cross": "manual"}
+  ]
+}

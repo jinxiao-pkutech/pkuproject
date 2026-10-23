@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Name: StringLocalizationTable_Customer_en
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 0ab1ff5b57ed1034289898a6733b77ac, type: 2}
+  m_TableData:
+  - m_Id: 3342562431001
+    m_Localized: "Select a charge amount"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3342562431035
+    m_Localized: "Enter other amount<br>(units of 1,000 yen)"
+    m_Metadata:
+      m_Items: []

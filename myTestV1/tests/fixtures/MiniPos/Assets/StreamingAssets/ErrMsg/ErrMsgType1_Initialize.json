@@ -1,0 +1,54 @@
+[
+    {
+        "ErrCode": 1,
+        "ErrPattern": 1,
+        "BaseMsg": "キー操作が正しくありません",
+        "Msg": "キー操作が正しくありません",
+        "BeepType": 1, "BtnType": 0, "SelfPosErrorType": 1, "SelfPosErrPattern": 1,
+        "SelfPosMsg": "キー操作が正しくありません",
+        "Msg_Hiragana": "キーそうさが　ただしくありません",
+        "SelfPosMsg_CN1": "<align=right>按键操作不正确",
+        "SelfPosMsg_CN2": "<align=right>按鍵操作不正確",
+        "SelfPosMsg_KR": "<align=right>키 조작이 올바르지 않습니다",
+        "SelfPosMsg_EN": "<align=right><size=18px>The key operation is not correct"
+    },
+    {
+        "ErrCode": 2,
+        "ErrPattern": 3,
+        "BaseMsg": "数が大きすぎます",
+        "Msg": "数が大きすぎます",
+        "BeepType": 1, "BtnType": 0, "SelfPosErrorType": 1, "SelfPosErrPattern": 3,
+        "SelfPosMsg": "数が大きすぎます",
+        "Msg_Hiragana": "数が　おおきすぎます",
+        "SelfPosMsg_CN1": "<align=right>数值过大",
+        "SelfPosMsg_CN2": "<align=right>數值過大",
+        "SelfPosMsg_KR": "<align=right>수가 너무 큽니다",
+        "SelfPosMsg_EN": "<align=right><size=18px>The number is too large"
+    },
+    {
+        "ErrCode": 22,
+        "ErrPattern": 3,
+        "BaseMsg": "登録できない数です",
+        "Msg": "登録できない数です",
+        "BeepType": 1, "BtnType": 0, "SelfPosErrorType": 1, "SelfPosErrPattern": 3,
+        "SelfPosMsg": "登録できない数です",
+        "Msg_Hiragana": "とうろくできない　数です",
+        "SelfPosMsg_CN1": "<align=right>该数值无法登记",
+        "SelfPosMsg_CN2": "<align=right>無法登記的數值",
+        "SelfPosMsg_KR": "<align=right>등록할 수 없는 수입니다",
+        "SelfPosMsg_EN": "<align=right><size=18px>The number cannot be registered"
+    },
+    {
+        "ErrCode": 24,
+        "ErrPattern": 2,
+        "BaseMsg": "金額を入力して下さい",
+        "Msg": "金額を入力して下さい",
+        "BeepType": 1, "BtnType": 0, "SelfPosErrorType": 1, "SelfPosErrPattern": 2,
+        "SelfPosMsg": "金額を入力して下さい",
+        "Msg_Hiragana": "きんがくを　にゅうりょくして　ください",
+        "SelfPosMsg_CN1": "<align=right>请输入金额",
+        "SelfPosMsg_CN2": "<align=right>請輸入金額",
+        "SelfPosMsg_KR": "<align=right>금액을 입력해 주세요",
+        "SelfPosMsg_EN": "<align=right><size=18px>Please enter the amount"
+    }
+]

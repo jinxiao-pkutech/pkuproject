@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/SceneCustomer/Reception/EdyCharge/View/Screen/EdyCharge_SSAW0907_View.uss?fileID=7433441132597879392&amp;guid=3c1f2e3d4a5b6c7d8e9f0a1b2c3d4e5f&amp;type=3#EdyCharge_SSAW0907_View" />
+    <Assets.Common.Script.Localization.Control.LocalizeImage name="popup_background" picking-mode="Ignore">
+        <ui:VisualElement name="EdyCharge_SSAW0907_View" picking-mode="Ignore">
+            <Assets.Common.Script.Localization.Control.LocalizeLabel name="Title" enable-rich-text="true" />
+            <Assets.Common.View.Parts.MB04_IconDigitText name="inputField" enable-rich-text="true" />
+            <Assets.Common.View.Parts.TenKeyControl name="tenkey">
+                <Assets.Common.View.Parts.TextInputControl name="vel_Txt" />
+            </Assets.Common.View.Parts.TenKeyControl>
+            <Assets.Common.View.Parts.BTN20_ButtonTextOnly focusable="true" name="btnOk" Size="S_400x120" Enabled="true" />
+            <Assets.Common.View.Parts.BTN18_ButtonBack focusable="true" name="btnClose" Size="S_200x80" Enabled="true" />
+        </ui:VisualElement>
+    </Assets.Common.Script.Localization.Control.LocalizeImage>
+</ui:UXML>

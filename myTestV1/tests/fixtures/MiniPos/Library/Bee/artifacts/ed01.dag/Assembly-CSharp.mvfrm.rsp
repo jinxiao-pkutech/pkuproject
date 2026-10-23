@@ -1,0 +1,4 @@
+-target:library
+-out:"Library/Bee/artifacts/ed01.dag/Assembly-CSharp.mvfrm.dll"
+-define:UNITY_EDITOR
+Assets/DoesNotExist/Decoy.cs
